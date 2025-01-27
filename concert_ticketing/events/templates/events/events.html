@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Concert Events</title>
+    <style>
+        :root {
+            --primary-color: #2a2f3b;
+            --accent-color: #0f67da;
+            --background-color: #f5f7fb;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            background-color: var(--background-color);
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .sync-status {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            font-size: 0.9em;
+        }
+
+        .events-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .event-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .event-title {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.4em;
+            position: relative;
+        }
+
+        .event-title:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        .ticket-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .ticket-item {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: #f8f9fa;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ticket-price {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .ticket-type {
+            font-weight: 500;
+        }
+
+        .quantity-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎤 Upcoming Concerts</h1>
+            {% if sync_message %}
+                <div class="sync-status">
+                    🔄 Sync Status: {{ sync_message }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="events-grid">
+            {% for event in events %}
+                <div class="event-card">
+                    <h2 class="event-title">{{ event.name }}</h2>
+                    <p><strong>📅 Date:</strong> {{ event.date }}</p>
+                    <p><strong>🏟 Venue:</strong> {{ event.venue }}</p>
+                    <p><strong>📝 Description:</strong> {{ event.description }}</p>
+                    
+                    <h3>🎟 Tickets Available:</h3>
+                    <ul class="ticket-list">
+                        {% for ticket in event.tickets %}
+                            <li class="ticket-item">
+                                <span class="ticket-type">{{ ticket.ticket_type }}</span>
+                                <span class="ticket-price">${{ ticket.price }}</span>
+                                <span class="quantity-badge">{{ ticket.quantity_available }} left</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
